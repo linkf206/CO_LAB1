@@ -63,4 +63,9 @@ begin
 	end
 end
 
+alu_top alu_top(.src1(src1[i]),
+                .src2(src2[i]),
+				.less(less),
+               );
+
 endmodule
