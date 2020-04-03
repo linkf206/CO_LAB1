@@ -50,6 +50,9 @@ reg             zero;
 reg             cout;
 reg             overflow;
 
+parameter And = 4'b0000, Or = 4'b0001, Add = 4'b0010,
+          Sub = 4'b0110, Nor = 4'b1100, Slt = 4'b0111;
+
 always@( posedge clk or negedge rst_n ) 
 begin
 	if(!rst_n) begin

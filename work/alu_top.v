@@ -38,7 +38,7 @@ input         less;
 input         A_invert;
 input         B_invert;
 input         cin;
-input [3-1:0] operation;
+input [2-1:0] operation;
 
 output        result;
 output        cout;
@@ -68,7 +68,7 @@ begin
 				result <= src1 ^ src2 ^ cin;
 				cout <= (src1 & src2) | (cin & (src1 ^ src2));
 			end
-		AND: 
+		NOR:
 			begin
 				result <= A_invert & B_invert;
 				cout <= 1'b0;
