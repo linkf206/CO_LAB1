@@ -45,27 +45,21 @@ output          zero;
 output          cout;
 output          overflow;
 
-reg    [32-1:0] result;
-reg             zero;
-reg             cout;
-reg             overflow;
+wire    [32-1:0] result;
+wire             zero;
+wire             cout;
+wire             overflow;
 
 parameter And = 4'b0000, Or = 4'b0001, Add = 4'b0010,
           Sub = 4'b0110, Nor = 4'b1100, Slt = 4'b0111;
 		  
-reg [32-1:0] cin;
+wire [32-1:0] cin;
 reg [2-1:0] less;
 reg [3-1:0] operation;
 
 always@( posedge clk or negedge rst_n ) 
 begin
 	if(!rst_n) begin
-		result <= 0;
-		zero <= 0;
-		cout <= 0;
-		overflow <= 0;
-		
-		cin<= 0;
 		less[0] <= cout;
 		less[1] <= 0;
 		operation <= 0;		
@@ -81,12 +75,23 @@ begin
 	end
 end
 
+alu_top alu_top0(
+			.src1(src1[1]),
+			.src2(src2[1]),
+			.less(less[1]),
+			.A_invert(~src1[1]),
+			.B_invert(~src2[1]),
+			.cin(cin[0]),
+			.operation(operation),
+			.result(result[1]),
+			.cout(cin[1])
+		);
+/*
 genvar idx;
 generate
 	for (idx = 1; idx < 31; idx = idx + 1)
 	begin:
-		alu_top
-		alu_1bit(
+		alu_top alu_top0(
 			.src1(src1[idx]),
 			.src2(src2[idx]),
 			.less(less[idx]),
@@ -99,5 +104,5 @@ generate
 		);
 	end
 endgenerate
-
+*/
 endmodule

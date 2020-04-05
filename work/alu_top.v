@@ -29,7 +29,7 @@ module alu_top(
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
                result,     //1 bit result   (output)
-               cout,       //1 bit carry out(output)
+               cout       //1 bit carry out(output)
                );
 
 input         src1;
