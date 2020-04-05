@@ -71,38 +71,51 @@ begin
 			Add: operation <= 3'b010;
 			Sub: operation <= 3'b011;
 			Nor: operation <= 3'b100;
+			Slt: operation <= 3'b101;
 		endcase
 	end
 end
 
 alu_top alu_top0(
-			.src1(src1[1]),
-			.src2(src2[1]),
-			.less(less[1]),
-			.A_invert(~src1[1]),
-			.B_invert(~src2[1]),
+			.src1(src1[0]),
+			.src2(src2[0]),
+			.less(less[0]),
+			.A_invert(~src1[0]),
+			.B_invert(~src2[0]),
 			.cin(cin[0]),
 			.operation(operation),
-			.result(result[1]),
+			.result(result[0]),
 			.cout(cin[1])
 		);
-/*
+
 genvar idx;
 generate
 	for (idx = 1; idx < 31; idx = idx + 1)
-	begin:
-		alu_top alu_top0(
+	begin: BLOCK1
+		alu_top alu_topI(
 			.src1(src1[idx]),
 			.src2(src2[idx]),
-			.less(less[idx]),
+			.less(less[1]),
 			.A_invert(~src1[idx]),
 			.B_invert(~src2[idx]),
-			.cin(cin[idx - 1]),
+			.cin(cin[idx]),
 			.operation(operation),
 			.result(result[idx]),
-			.cout(cin[idx])
+			.cout(cin[idx+1])
 		);
 	end
 endgenerate
-*/
+
+alu_top alu_top31(
+			.src1(src1[31]),
+			.src2(src2[31]),
+			.less(less[0]),
+			.A_invert(~src1[31]),
+			.B_invert(~src2[31]),
+			.cin(cin[31]),
+			.operation(operation),
+			.result(result[31]),
+			.cout(cout)
+		);
+
 endmodule

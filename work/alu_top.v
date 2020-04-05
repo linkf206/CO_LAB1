@@ -49,7 +49,8 @@ parameter AND = 3'b000,
           OR = 3'b001,
           ADD = 3'b010,
 		  SUB = 3'b011,
-		  NOR = 3'b100;
+		  NOR = 3'b100,
+		  SLT = 3'b101;
 
 always@( src1 or src2 or operation )
 begin
@@ -77,6 +78,11 @@ begin
 		NOR:
 			begin
 				result <= A_invert & B_invert;
+				cout <= 1'b0;
+			end
+		SLT:
+			begin
+				result <= less;
 				cout <= 1'b0;
 			end
 	endcase

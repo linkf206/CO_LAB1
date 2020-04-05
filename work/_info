@@ -9,65 +9,65 @@ z2
 cModel Technology
 dC:/Modeltech_pe_edu_10.4a/examples
 valu
-!s110 1586087457
+Z0 !s110 1586091163
 !i10b 1
-!s100 bF_:X`8hojF4cQ`f^5Qa`3
-I5ffR2`YUS<hiDcenLXVfd1
-Z0 VDg1SIo80bB@j0V0VzS_@n1
-Z1 dC:/Users/linkf/1myself/studies/ComputerOrganization/Project1
-w1586087453
+!s100 :`KJgUFiA_7<LokO1ZYBb2
+IiHka8cNINPccEmgIM:[dY2
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dC:/Users/linkf/1myself/studies/ComputerOrganization/Project1
+w1586090885
 8C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu.v
 FC:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu.v
-Z2 L0 23
-Z3 OP;L;10.4a;61
+Z3 L0 23
+Z4 OP;L;10.4a;61
 r1
 !s85 0
 31
-!s108 1586087457.000000
+Z5 !s108 1586091163.000000
 !s107 C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu.v|
 !s101 -O0
 !i113 1
-Z4 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
+Z6 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
 valu_top
-Z5 !s110 1586087415
-!i10b 1
-!s100 S;RBPYz[1?Rk2`^blWEgh2
-ImB=I83d:O=?Eh5bH4D;l?3
 R0
+!i10b 1
+!s100 VEiZlaWg0?EhWJbPNg<I53
+I5RM3gHcz<Ic7bO<CLX3_>3
 R1
-w1586084189
+R2
+w1586090658
 8C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu_top.v
 FC:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu_top.v
-R2
 R3
+R4
 r1
 !s85 0
 31
-Z6 !s108 1586087415.000000
+R5
 !s107 C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu_top.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/alu_top.v|
 !s101 -O0
 !i113 1
-R4
+R6
 vtestbench
-R5
+R0
 !i10b 1
 !s100 jUEDYja:@RZVNbfMe2S>=3
 IYf@Wf05HhBm<==fzh1Van1
-R0
 R1
+R2
 w1586075823
 8C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/testbench.v
 FC:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/testbench.v
 L0 25
-R3
+R4
 r1
 !s85 0
 31
-R6
+R5
 !s107 C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/testbench.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Users/linkf/1myself/studies/ComputerOrganization/Project1/work/testbench.v|
 !s101 -O0
 !i113 1
-R4
+R6
