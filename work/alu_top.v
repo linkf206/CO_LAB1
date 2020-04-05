@@ -38,17 +38,18 @@ input         less;
 input         A_invert;
 input         B_invert;
 input         cin;
-input [2-1:0] operation;
+input [3-1:0] operation;
 
 output        result;
 output        cout;
 
 reg           result, cout;
 
-parameter OR = 2'b00, 
-          AND = 2'b01,
-          ADD = 2'b10,
-		  NOR = 2'b11;
+parameter AND = 3'b000, 
+          OR = 3'b001,
+          ADD = 3'b010,
+		  SUB = 3'b011,
+		  NOR = 3'b100;
 
 always@( src1 or src2 or operation )
 begin
@@ -67,6 +68,11 @@ begin
 			begin
 				result <= src1 ^ src2 ^ cin;
 				cout <= (src1 & src2) | (cin & (src1 ^ src2));
+			end
+		SUB: 
+			begin
+				result <= src1 ^ B_invert ^ cin;
+				cout <= (src1 & B_invert) | (cin & (src1 ^ B_invert));
 			end
 		NOR:
 			begin
