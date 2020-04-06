@@ -45,45 +45,50 @@ output        cout;
 
 reg           result, cout;
 
-parameter AND = 3'b000, 
-          OR = 3'b001,
-          ADD = 3'b010,
-		  SUB = 3'b011,
-		  NOR = 3'b100,
-		  SLT = 3'b101;
+parameter AND = 3'b001, 
+          OR  = 3'b010,
+          ADD = 3'b011,
+		  SUB = 3'b100,
+		  NOR = 3'b101,
+		  SLT = 3'b110;
 
 always@( src1 or src2 or operation )
 begin
 	case(operation)
 		AND: 
 			begin
-				result <= src1 & src2;
-				cout <= 1'b0;
+				result = src1 && src2;
+				cout = 1'b0;
 			end
 		OR: 
 			begin
-				result <= src1 | src2;
-				cout <= 1'b0;
+				result = src1 || src2;
+				cout = 1'b0;
 			end
 		ADD: 
 			begin
-				result <= src1 ^ src2 ^ cin;
-				cout <= (src1 & src2) | (cin & (src1 ^ src2));
+				result = (src1 ^ src2) ^ cin;
+				cout = (src1 & src2) | (cin & (src1 ^ src2));
 			end
 		SUB: 
 			begin
-				result <= src1 ^ B_invert ^ cin;
-				cout <= (src1 & B_invert) | (cin & (src1 ^ B_invert));
+				result = src1 ^ B_invert ^ cin;
+				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
 			end
 		NOR:
 			begin
-				result <= A_invert & B_invert;
-				cout <= 1'b0;
+				result = A_invert & B_invert;
+				cout = 1'b0;
 			end
 		SLT:
 			begin
-				result <= less;
-				cout <= 1'b0;
+				result = less;
+				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
+			end
+		default:
+			begin
+				result = 1'b0;
+				cout = 1'b0;
 			end
 	endcase
 end

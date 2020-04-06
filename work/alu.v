@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 
 //////////////////////////////////////////////////////////////////////////////////
-// Company:
-// Engineer:
+// student ID:0710003
+// name:林克帆
 //
 // Create Date:    15:15:11 08/18/2013
 // Design Name:
@@ -31,6 +31,7 @@ module alu(
            zero,          // 1 bit when the output is 0, zero must be set (output)
            cout,          // 1 bit carry out           (output)
            overflow       // 1 bit overflow            (output)
+		   ,check         //check
            );
 
 input           clk;
@@ -44,78 +45,97 @@ output [32-1:0] result;
 output          zero;
 output          cout;
 output          overflow;
+output [32-1:0]  check;////////////////////////////////////
+
 
 wire    [32-1:0] result;
 wire             zero;
 wire             cout;
 wire             overflow;
 
-parameter And = 4'b0000, Or = 4'b0001, Add = 4'b0010,
+parameter And = 4'b0000, Or  = 4'b0001, Add = 4'b0010,
           Sub = 4'b0110, Nor = 4'b1100, Slt = 4'b0111;
 		  
+wire [31-1:0] t_cout;
 wire [32-1:0] cin;
-reg [2-1:0] less;
-reg [3-1:0] operation;
+wire  [2-1:0] less;
+reg   [3-1:0] operation;
+reg  [32-1:0] r_src1, r_src2;
+
+assign cin = {t_cout, 1'b0};
+assign less[0] = cout;
+assign less[1] = 0;
+assign check = cin;//
 
 always@( posedge clk or negedge rst_n ) 
 begin
 	if(!rst_n) begin
-		less[0] <= cout;
-		less[1] <= 0;
-		operation <= 0;		
+		operation <= 3'b000;
 	end
 	else begin
 		case(ALU_control)
-			And: operation <= 3'b000;
-			Or: operation <= 3'b001;
-			Add: operation <= 3'b010;
-			Sub: operation <= 3'b011;
-			Nor: operation <= 3'b100;
-			Slt: operation <= 3'b101;
+			And: operation = 3'b001;
+			Or:  operation = 3'b010;
+			Add: operation = 3'b011;
+			Sub: operation = 3'b100;
+			Nor: operation = 3'b101;
+			Slt: operation = 3'b110;
+			default: operation = 3'b111;
 		endcase
+		
+		r_src1 = src1;
+		r_src2 = src2;
+		//cin = {t_cout, 1'b0};
 	end
 end
 
-alu_top alu_top0(
-			.src1(src1[0]),
-			.src2(src2[0]),
-			.less(less[0]),
-			.A_invert(~src1[0]),
-			.B_invert(~src2[0]),
-			.cin(cin[0]),
-			.operation(operation),
-			.result(result[0]),
-			.cout(cin[1])
-		);
-
 genvar idx;
 generate
-	for (idx = 1; idx < 31; idx = idx + 1)
-	begin: BLOCK1
-		alu_top alu_topI(
-			.src1(src1[idx]),
-			.src2(src2[idx]),
-			.less(less[1]),
-			.A_invert(~src1[idx]),
-			.B_invert(~src2[idx]),
-			.cin(cin[idx]),
-			.operation(operation),
-			.result(result[idx]),
-			.cout(cin[idx+1])
-		);
+	for (idx = 0; idx < 32; idx = idx + 1)
+	begin: BLOCK
+		if(idx == 0)
+			begin
+				alu_top alu_topI(
+					.src1(r_src1[idx]),
+					.src2(r_src2[idx]),
+					.less(less[0]),
+					.A_invert(~r_src1[idx]),
+					.B_invert(~r_src2[idx]),
+					.cin(cin[idx]),
+					.operation(operation),
+					.result(result[idx]),
+					.cout(t_cout[idx])
+				);
+			end
+		else if(idx == 31)
+			begin
+				alu_top alu_topI(
+					.src1(r_src1[idx]),
+					.src2(r_src2[idx]),
+					.less(less[1]),
+					.A_invert(~r_src1[idx]),
+					.B_invert(~r_src2[idx]),
+					.cin(cin[idx]),
+					.operation(operation),
+					.result(result[idx]),
+					.cout(cout)
+				);
+			end
+		else
+			begin
+				alu_top alu_topI(
+					.src1(r_src1[idx]),
+					.src2(r_src2[idx]),
+					.less(less[1]),
+					.A_invert(~r_src1[idx]),
+					.B_invert(~r_src2[idx]),
+					.cin(cin[idx]),
+					.operation(operation),
+					.result(result[idx]),
+					.cout(t_cout[idx])
+				);
+			end
 	end
 endgenerate
-
-alu_top alu_top31(
-			.src1(src1[31]),
-			.src2(src2[31]),
-			.less(less[0]),
-			.A_invert(~src1[31]),
-			.B_invert(~src2[31]),
-			.cin(cin[31]),
-			.operation(operation),
-			.result(result[31]),
-			.cout(cout)
-		);
 
 endmodule

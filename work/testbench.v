@@ -59,6 +59,7 @@ wire [32-1:0] result_correct;
 wire  [8-1:0] zcv_correct;
 wire  [8-1:0] opcode_tmp;
 wire  [8-1:0] bonus_tmp; 
+wire  [32-1:0] check;/////////////////////////////////////////
 
 assign zcv_out = {zero_out, cout_out, overflow_out};
 
@@ -106,6 +107,7 @@ alu alu(.clk(clk),
         .zero(zero_out),
         .cout(cout_out),
         .overflow(overflow_out)
+		,.check(check)//
        );
 `else
 alu alu(.clk(clk),
@@ -117,6 +119,7 @@ alu alu(.clk(clk),
         .zero(zero_out),
         .cout(cout_out),
         .overflow(overflow_out)
+		,.check(check)//
        );
 `endif
 
