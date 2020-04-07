@@ -45,7 +45,7 @@ output [32-1:0] result;
 output          zero;
 output          cout;
 output          overflow;
-output [32-1:0]  check;////////////////////////////////////
+output [4*32-1:0]  check;////////////////////////////////////
 
 
 wire    [32-1:0] result;
@@ -58,14 +58,12 @@ parameter And = 4'b0000, Or  = 4'b0001, Add = 4'b0010,
 		  
 wire [31-1:0] t_cout;
 wire [32-1:0] cin;
-wire  [2-1:0] less;
 reg   [3-1:0] operation;
 reg  [32-1:0] r_src1, r_src2;
+wire [4*32-1:0] checktop;/////////////////////////////////
 
-assign cin = {t_cout, 1'b0};
-assign less[0] = cout;
-assign less[1] = 0;
-assign check = cin;//
+assign cin = t_cout << 1;
+assign check = checktop;//
 
 always@( posedge clk or negedge rst_n ) 
 begin
@@ -85,7 +83,6 @@ begin
 		
 		r_src1 = src1;
 		r_src2 = src2;
-		//cin = {t_cout, 1'b0};
 	end
 end
 
@@ -98,13 +95,14 @@ generate
 				alu_top alu_topI(
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
-					.less(less[0]),
+					.less(cout),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
 					.cin(cin[idx]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])
+					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 		else if(idx == 31)
@@ -112,13 +110,14 @@ generate
 				alu_top alu_topI(
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
-					.less(less[1]),
+					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
 					.cin(cin[idx]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(cout)
+					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 		else
@@ -126,13 +125,14 @@ generate
 				alu_top alu_topI(
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
-					.less(less[1]),
+					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
 					.cin(cin[idx]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])
+					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 	end

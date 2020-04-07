@@ -29,7 +29,8 @@ module alu_top(
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
                result,     //1 bit result   (output)
-               cout       //1 bit carry out(output)
+               cout        //1 bit carry out(output)
+			   ,checktop   //
                );
 
 input         src1;
@@ -42,8 +43,11 @@ input [3-1:0] operation;
 
 output        result;
 output        cout;
+output[4-1:0] checktop;///////////////////
 
 reg           result, cout;
+
+assign checktop = {cout, src1, src2, cin};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
@@ -67,13 +71,14 @@ begin
 			end
 		ADD: 
 			begin
-				result = (src1 ^ src2) ^ cin;
-				cout = (src1 & src2) | (cin & (src1 ^ src2));
+				{cout, result} = src1 + src2 + cin;
+				//result = src1 ^ src2 ^ cin;
+				//cout = (src1 & src2) | (cin & src1) | (cin & src2);
 			end
 		SUB: 
 			begin
 				result = src1 ^ B_invert ^ cin;
-				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
+				cout = ((src1 & B_invert) | (cin & src1) | (cin & B_invert));
 			end
 		NOR:
 			begin
