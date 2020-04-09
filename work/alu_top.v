@@ -21,6 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module alu_top(
+			   clk,        // system clock              (input)
                src1,       //1 bit source 1 (input)
                src2,       //1 bit source 2 (input)
                less,       //1 bit less     (input)
@@ -33,6 +34,7 @@ module alu_top(
 			   ,checktop   //
                );
 
+input         clk;
 input         src1;
 input         src2;
 input         less;
@@ -46,8 +48,11 @@ output        cout;
 output[4-1:0] checktop;///////////////////
 
 reg           result, cout;
+reg 		  src1_temp,
+			  src2_temp;
+reg 		  test;
 
-assign checktop = {cout, src1, src2, cin};
+assign checktop = {test, src1, src2, cin};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
@@ -56,7 +61,7 @@ parameter AND = 3'b001,
 		  NOR = 3'b101,
 		  SLT = 3'b110;
 
-always@( src1 or src2 or operation )
+always@( src1 or src2 or operation or cin)
 begin
 	case(operation)
 		AND: 
@@ -71,9 +76,8 @@ begin
 			end
 		ADD: 
 			begin
-				{cout, result} = src1 + src2 + cin;
-				//result = src1 ^ src2 ^ cin;
-				//cout = (src1 & src2) | (cin & src1) | (cin & src2);
+				result = src1 ^ src2 ^ cin;
+				cout = (src1 & src2) | (cin & (src1 | src2));
 			end
 		SUB: 
 			begin
@@ -97,5 +101,7 @@ begin
 			end
 	endcase
 end
+
+
 
 endmodule

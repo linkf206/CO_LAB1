@@ -63,6 +63,7 @@ reg  [32-1:0] r_src1, r_src2;
 wire [4*32-1:0] checktop;/////////////////////////////////
 
 assign cin = t_cout << 1;
+assign zero = ~| result;
 assign check = checktop;//
 
 always@( posedge clk or negedge rst_n ) 
@@ -93,6 +94,7 @@ generate
 		if(idx == 0)
 			begin
 				alu_top alu_topI(
+					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(cout),
@@ -108,6 +110,7 @@ generate
 		else if(idx == 31)
 			begin
 				alu_top alu_topI(
+					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(1'b0),
@@ -123,6 +126,7 @@ generate
 		else
 			begin
 				alu_top alu_topI(
+					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(1'b0),
