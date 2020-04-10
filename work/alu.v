@@ -60,10 +60,12 @@ wire [31-1:0] t_cout;
 wire [32-1:0] cin;
 reg   [3-1:0] operation;
 reg  [32-1:0] r_src1, r_src2;
+reg           cin0;
 wire [4*32-1:0] checktop;/////////////////////////////////
 
 assign cin = t_cout << 1;
-assign zero = ~| result;
+assign cin[0] = operation[2];
+assign zero = ~(| result);
 assign check = checktop;//
 
 always@( posedge clk or negedge rst_n ) 
@@ -75,10 +77,22 @@ begin
 		case(ALU_control)
 			And: operation = 3'b001;
 			Or:  operation = 3'b010;
-			Add: operation = 3'b011;
-			Sub: operation = 3'b100;
+			Add: 
+			begin
+				operation = 3'b011;
+				cin0 = 0;
+			end
+			Sub: 
+			begin
+				operation = 3'b100;
+				cin0 = 1;
+			end
 			Nor: operation = 3'b101;
-			Slt: operation = 3'b110;
+			Slt: 
+			begin
+				operation = 3'b110;
+				cin0 = 1;
+			end
 			default: operation = 3'b111;
 		endcase
 		
@@ -97,10 +111,10 @@ generate
 					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
-					.less(cout),
+					.less(result[31]),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
-					.cin(cin[idx]),
+					.cin(cin0),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])
@@ -116,7 +130,7 @@ generate
 					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
-					.cin(cin[idx]),
+					.cin(t_cout['d30]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(cout)
@@ -132,7 +146,7 @@ generate
 					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
-					.cin(cin[idx]),
+					.cin(t_cout[idx - 1]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])

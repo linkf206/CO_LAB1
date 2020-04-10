@@ -52,7 +52,7 @@ reg 		  src1_temp,
 			  src2_temp;
 reg 		  test;
 
-assign checktop = {test, src1, src2, cin};
+assign checktop = {cout, src1, src2, cin};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
