@@ -58,6 +58,7 @@ parameter And = 4'b0000, Or  = 4'b0001, Add = 4'b0010,
 		  
 wire [31-1:0] t_cout;
 wire [32-1:0] cin;
+wire          set;
 reg   [3-1:0] operation;
 reg  [32-1:0] r_src1, r_src2;
 reg           cin0;
@@ -75,8 +76,16 @@ begin
 	end
 	else begin
 		case(ALU_control)
-			And: operation = 3'b001;
-			Or:  operation = 3'b010;
+			And: 
+			begin
+				operation = 3'b001;
+				cin0 = 0;
+			end
+			Or:  
+			begin
+				operation = 3'b010;
+				cin0 = 0;
+			end
 			Add: 
 			begin
 				operation = 3'b011;
@@ -87,7 +96,11 @@ begin
 				operation = 3'b100;
 				cin0 = 1;
 			end
-			Nor: operation = 3'b101;
+			Nor: 
+			begin
+				operation = 3'b101;
+				cin0 = 0;
+			end
 			Slt: 
 			begin
 				operation = 3'b110;
@@ -111,7 +124,7 @@ generate
 					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
-					.less(result[31]),
+					.less(set),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
 					.cin(cin0),
@@ -123,7 +136,7 @@ generate
 			end
 		else if(idx == 31)
 			begin
-				alu_top alu_topI(
+				alu_bottom alu_bottomI(
 					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
@@ -133,7 +146,9 @@ generate
 					.cin(t_cout['d30]),
 					.operation(operation),
 					.result(result[idx]),
-					.cout(cout)
+					.cout(cout),
+					.set(set),
+					.overflow(overflow)
 					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end

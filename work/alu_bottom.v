@@ -30,7 +30,9 @@ module alu_top(
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
                result,     //1 bit result   (output)
-               cout        //1 bit carry out(output)
+               cout,        //1 bit carry out(output)
+			   set,        //1 bit set      (output)
+			   overflow    //1 bit overflow (output)
 			   ,checktop   //
                );
 
@@ -45,9 +47,11 @@ input [3-1:0] operation;
 
 output        result;
 output        cout;
+output        set;
+output        overflow;
 output[4-1:0] checktop;///////////////////
 
-reg           result, cout;
+reg           result, cout, set, overflow;
 reg 		  src1_temp,
 			  src2_temp;
 reg 		  test;
@@ -68,36 +72,50 @@ begin
 			begin
 				result = src1 && src2;
 				cout = 1'b0;
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		OR: 
 			begin
 				result = src1 || src2;
 				cout = 1'b0;
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		ADD: 
 			begin
 				result = src1 ^ src2 ^ cin;
 				cout = (src1 & src2) | (cin & (src1 | src2));
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		SUB: 
 			begin
 				result = src1 ^ B_invert ^ cin;
 				cout = (src1 & B_invert) | (cin & (src1 | B_invert));
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		NOR:
 			begin
 				result = A_invert & B_invert;
 				cout = 1'b0;
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		SLT:
 			begin
 				result = less;
 				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 		default:
 			begin
 				result = 1'b0;
 				cout = 1'b0;
+				set = 1'b0;
+				overflow = 1'b0;
 			end
 	endcase
 end
