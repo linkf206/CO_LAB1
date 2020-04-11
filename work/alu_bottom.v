@@ -20,7 +20,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module alu_top(
+module alu_bottom(
 			   clk,        // system clock              (input)
                src1,       //1 bit source 1 (input)
                src2,       //1 bit source 2 (input)
@@ -65,7 +65,7 @@ parameter AND = 3'b001,
 		  NOR = 3'b101,
 		  SLT = 3'b110;
 
-always@( src1 or src2 or operation or cin)
+always@(*)
 begin
 	case(operation)
 		AND: 
@@ -87,14 +87,18 @@ begin
 				result = src1 ^ src2 ^ cin;
 				cout = (src1 & src2) | (cin & (src1 | src2));
 				set = 1'b0;
-				overflow = 1'b0;
+				overflow = (src1 ^ src2)? 1'b0:
+				           (src1 ^ src2 ^ cin == src1)? 1'b0:
+						   1'b1;
 			end
 		SUB: 
 			begin
 				result = src1 ^ B_invert ^ cin;
 				cout = (src1 & B_invert) | (cin & (src1 | B_invert));
 				set = 1'b0;
-				overflow = 1'b0;
+				overflow = (src1 ^ B_invert)? 1'b0:
+				           (src1 ^ B_invert ^ cin == src1)? 1'b0:
+						   1'b1;
 			end
 		NOR:
 			begin
@@ -106,8 +110,8 @@ begin
 		SLT:
 			begin
 				result = less;
-				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
-				set = 1'b0;
+				cout = 1'b0;
+				set = src1 ^ B_invert ^ cin;
 				overflow = 1'b0;
 			end
 		default:

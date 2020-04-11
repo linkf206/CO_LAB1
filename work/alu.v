@@ -143,7 +143,7 @@ generate
 					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
-					.cin(t_cout['d30]),
+					.cin(cin[idx]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(cout),
@@ -161,7 +161,7 @@ generate
 					.less(1'b0),
 					.A_invert(~r_src1[idx]),
 					.B_invert(~r_src2[idx]),
-					.cin(t_cout[idx - 1]),
+					.cin(cin[idx]),
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])

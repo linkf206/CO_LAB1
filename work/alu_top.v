@@ -52,7 +52,7 @@ reg 		  src1_temp,
 			  src2_temp;
 reg 		  test;
 
-assign checktop = {cout, src1, src2, cin};
+assign checktop = {result, src1, src2, less};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
@@ -61,7 +61,7 @@ parameter AND = 3'b001,
 		  NOR = 3'b101,
 		  SLT = 3'b110;
 
-always@( src1 or src2 or operation or cin)
+always@(*)
 begin
 	case(operation)
 		AND: 
