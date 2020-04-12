@@ -111,7 +111,8 @@ begin
 			begin
 				result = less;
 				cout = 1'b0;
-				set = src1 ^ B_invert ^ cin;
+				set = (src1 ^ src2)? ~(src1 < src2):
+									 src1 ^ B_invert ^ cin;
 				overflow = 1'b0;
 			end
 		default:
