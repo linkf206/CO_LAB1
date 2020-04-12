@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module alu_top(
-			   clk,        // system clock              (input)
-               src1,       //1 bit source 1 (input)
+			   src1,       //1 bit source 1 (input)
                src2,       //1 bit source 2 (input)
                less,       //1 bit less     (input)
                A_invert,   //1 bit A_invert (input)
@@ -31,10 +30,8 @@ module alu_top(
                operation,  //operation      (input)
                result,     //1 bit result   (output)
                cout        //1 bit carry out(output)
-			   ,checktop   //
                );
 
-input         clk;
 input         src1;
 input         src2;
 input         less;
@@ -45,14 +42,11 @@ input [3-1:0] operation;
 
 output        result;
 output        cout;
-output[4-1:0] checktop;///////////////////
 
 reg           result, cout;
 reg 		  src1_temp,
 			  src2_temp;
 reg 		  test;
-
-assign checktop = {result, src1, src2, less};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,

@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module alu_bottom(
-			   clk,        // system clock              (input)
-               src1,       //1 bit source 1 (input)
+			   src1,       //1 bit source 1 (input)
                src2,       //1 bit source 2 (input)
                less,       //1 bit less     (input)
                A_invert,   //1 bit A_invert (input)
@@ -30,13 +29,11 @@ module alu_bottom(
                cin,        //1 bit carry in (input)
                operation,  //operation      (input)
                result,     //1 bit result   (output)
-               cout,        //1 bit carry out(output)
+               cout,       //1 bit carry out(output)
 			   set,        //1 bit set      (output)
 			   overflow    //1 bit overflow (output)
-			   ,checktop   //
                );
 
-input         clk;
 input         src1;
 input         src2;
 input         less;
@@ -49,14 +46,11 @@ output        result;
 output        cout;
 output        set;
 output        overflow;
-output[4-1:0] checktop;///////////////////
 
 reg           result, cout, set, overflow;
 reg 		  src1_temp,
 			  src2_temp;
 reg 		  test;
-
-assign checktop = {cout, src1, src2, cin};
 
 parameter AND = 3'b001, 
           OR  = 3'b010,

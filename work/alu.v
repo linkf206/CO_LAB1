@@ -31,7 +31,6 @@ module alu(
            zero,          // 1 bit when the output is 0, zero must be set (output)
            cout,          // 1 bit carry out           (output)
            overflow       // 1 bit overflow            (output)
-		   ,check         //check
            );
 
 input           clk;
@@ -45,7 +44,6 @@ output [32-1:0] result;
 output          zero;
 output          cout;
 output          overflow;
-output [4*32-1:0]  check;////////////////////////////////////
 
 
 wire    [32-1:0] result;
@@ -62,12 +60,10 @@ wire          set;
 reg   [3-1:0] operation;
 reg  [32-1:0] r_src1, r_src2;
 reg           cin0;
-wire [4*32-1:0] checktop;/////////////////////////////////
 
 assign cin = t_cout << 1;
 assign cin[0] = operation[2];
 assign zero = ~(| result);
-assign check = checktop;//
 
 always@( posedge clk or negedge rst_n ) 
 begin
@@ -121,7 +117,6 @@ generate
 		if(idx == 0)
 			begin
 				alu_top alu_topI(
-					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(set),
@@ -131,13 +126,11 @@ generate
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])
-					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 		else if(idx == 31)
 			begin
 				alu_bottom alu_bottomI(
-					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(1'b0),
@@ -149,13 +142,11 @@ generate
 					.cout(cout),
 					.set(set),
 					.overflow(overflow)
-					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 		else
 			begin
 				alu_top alu_topI(
-					.clk(clk),
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(1'b0),
@@ -165,7 +156,6 @@ generate
 					.operation(operation),
 					.result(result[idx]),
 					.cout(t_cout[idx])
-					,.checktop(checktop[4*idx+3 -:4])
 				);
 			end
 	end
