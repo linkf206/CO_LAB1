@@ -30,8 +30,8 @@ module alu_bottom(
                operation,  //operation      (input)
                result,     //1 bit result   (output)
                cout,       //1 bit carry out(output)
-			   set,        //1 bit set      (output)
-			   overflow    //1 bit overflow (output)
+			   set,        //1 bit set      (output)                     //to set the less input of 1st alu_top 
+			   overflow    //1 bit overflow (output)                     //to set overflow
                );
 
 input         src1;
@@ -48,9 +48,6 @@ output        set;
 output        overflow;
 
 reg           result, cout, set, overflow;
-reg 		  src1_temp,
-			  src2_temp;
-reg 		  test;
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
@@ -64,14 +61,14 @@ begin
 	case(operation)
 		AND: 
 			begin
-				result = src1 && src2;
+				result = src1 & src2;
 				cout = 1'b0;
 				set = 1'b0;
 				overflow = 1'b0;
 			end
 		OR: 
 			begin
-				result = src1 || src2;
+				result = src1 | src2;
 				cout = 1'b0;
 				set = 1'b0;
 				overflow = 1'b0;
@@ -81,11 +78,11 @@ begin
 				result = src1 ^ src2 ^ cin;
 				cout = (src1 & src2) | (cin & (src1 | src2));
 				set = 1'b0;
-				overflow = (src1 ^ src2)? 1'b0:
-				           (src1 ^ src2 ^ cin == src1)? 1'b0:
+				overflow = (src1 ^ src2)? 1'b0:                            //positive add negative or negative add positive will not overflow
+				           (src1 ^ src2 ^ cin == src1)? 1'b0:              //C = A + B. if signbit of C not equals to signbit of A, which means overflow
 						   1'b1;
 			end
-		SUB: 
+		SUB:                                                               //sub equals to add 2'complement(~src2 + cin, where cin = 1)
 			begin
 				result = src1 ^ B_invert ^ cin;
 				cout = (src1 & B_invert) | (cin & (src1 | B_invert));
@@ -105,8 +102,8 @@ begin
 			begin
 				result = less;
 				cout = 1'b0;
-				set = (src1 ^ src2)? ~(src1 < src2):
-									 src1 ^ B_invert ^ cin;
+				set = (src1 ^ src2)? ~(src1 < src2):                       //if signbit of src1 and src2 are not equal, then I can judge set volume directly.
+									 src1 ^ B_invert ^ cin;                //otherwise, I need to get the signbit of src1 SUB src2
 				overflow = 1'b0;
 			end
 		default:

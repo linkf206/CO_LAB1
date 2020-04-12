@@ -54,21 +54,23 @@ wire             overflow;
 parameter And = 4'b0000, Or  = 4'b0001, Add = 4'b0010,
           Sub = 4'b0110, Nor = 4'b1100, Slt = 4'b0111;
 		  
-wire [31-1:0] t_cout;
-wire [32-1:0] cin;
-wire          set;
+wire [31-1:0] t_cout;                                 //the cout of each alu_top
+wire [32-1:0] cin;									  //the cin of each alu_top and alu_bottom
+wire          set;									  //the less input of 1st alu_top
 reg   [3-1:0] operation;
-reg  [32-1:0] r_src1, r_src2;
-reg           cin0;
+reg  [32-1:0] r_src1, r_src2;                         //register the volume og src1 and src2
+reg           cin0;                                   //the cin of 1st alu_top
 
-assign cin = t_cout << 1;
-assign cin[0] = operation[2];
-assign zero = ~(| result);
+assign cin = t_cout << 1;							  //each alu_top cin is the previous alu_top cout
+assign zero = ~(| result);							  //if result == 0, then zero =1; otherwise, zero = 0
 
 always@( posedge clk or negedge rst_n ) 
 begin
-	if(!rst_n) begin
-		operation <= 3'b000;
+	if(!rst_n) begin								  //initail set
+		operation = 3'b000;
+		r_src1 = 0;
+		r_src2 = 0;
+		cin0 = 0;
 	end
 	else begin
 		case(ALU_control)
@@ -90,7 +92,7 @@ begin
 			Sub: 
 			begin
 				operation = 3'b100;
-				cin0 = 1;
+				cin0 = 1;							  //2'complement is ~src2 + 1, so cin = 1	
 			end
 			Nor: 
 			begin
@@ -114,9 +116,9 @@ genvar idx;
 generate
 	for (idx = 0; idx < 32; idx = idx + 1)
 	begin: BLOCK
-		if(idx == 0)
+		if(idx == 0)								 //the 1st alu_top	
 			begin
-				alu_top alu_topI(
+				alu_top alu_topI(				
 					.src1(r_src1[idx]),
 					.src2(r_src2[idx]),
 					.less(set),
@@ -128,7 +130,7 @@ generate
 					.cout(t_cout[idx])
 				);
 			end
-		else if(idx == 31)
+		else if(idx == 31)							 //the alu_bottom
 			begin
 				alu_bottom alu_bottomI(
 					.src1(r_src1[idx]),
@@ -144,7 +146,7 @@ generate
 					.overflow(overflow)
 				);
 			end
-		else
+		else										 //the other alu_top	
 			begin
 				alu_top alu_topI(
 					.src1(r_src1[idx]),

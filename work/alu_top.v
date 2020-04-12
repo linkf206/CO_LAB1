@@ -38,15 +38,12 @@ input         less;
 input         A_invert;
 input         B_invert;
 input         cin;
-input [3-1:0] operation;
+input [3-1:0] operation;                                                    //there are six types of operation, so operation is 3bit
 
 output        result;
 output        cout;
 
 reg           result, cout;
-reg 		  src1_temp,
-			  src2_temp;
-reg 		  test;
 
 parameter AND = 3'b001, 
           OR  = 3'b010,
@@ -55,17 +52,17 @@ parameter AND = 3'b001,
 		  NOR = 3'b101,
 		  SLT = 3'b110;
 
-always@(*)
+always@(*)																	//because alu_top will work if src1, src2, less, cin, operation change. So I use *(it means all inputs) to trigger always block
 begin
 	case(operation)
 		AND: 
 			begin
-				result = src1 && src2;
+				result = src1 & src2;
 				cout = 1'b0;
 			end
 		OR: 
 			begin
-				result = src1 || src2;
+				result = src1 | src2;
 				cout = 1'b0;
 			end
 		ADD: 
@@ -73,17 +70,17 @@ begin
 				result = src1 ^ src2 ^ cin;
 				cout = (src1 & src2) | (cin & (src1 | src2));
 			end
-		SUB: 
+		SUB:  																//sub equals to add 2'complement(~src2 + cin, where cin = 1)
 			begin
 				result = src1 ^ B_invert ^ cin;
 				cout = (src1 & B_invert) | (cin & (src1 | B_invert));
 			end
-		NOR:
+		NOR:																//A nor B = not (A or B) = (not A) and (not B)
 			begin
 				result = A_invert & B_invert;
 				cout = 1'b0;
 			end
-		SLT:
+		SLT:																//SLT need SUB to check, so SLT cout == SUB cout
 			begin
 				result = less;
 				cout = (src1 & B_invert) | (cin & (src1 ^ B_invert));
